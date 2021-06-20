@@ -1,8 +1,8 @@
 import Foundation
 
-struct FPT_Backend {
+public struct FPT_Backend {
     var text = "Hello, World!"
-    func showText() {
+    public func showText() {
         print(text)
     }
 }
