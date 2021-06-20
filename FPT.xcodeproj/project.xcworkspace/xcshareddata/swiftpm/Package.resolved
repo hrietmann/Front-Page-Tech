@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Views",
+        "repositoryURL": "https://github.com/hrietmann/Views.git",
+        "state": {
+          "branch": null,
+          "revision": "6f9d0006b15a56cb428138ae8d9f2ce3b332ea1e",
+          "version": "0.0.6"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
