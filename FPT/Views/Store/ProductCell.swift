@@ -6,13 +6,18 @@
 //
 
 import SwiftUI
+import Views
+
 
 struct ProductCell: View {
     
     let product: Product
+    @State private var presentNotWorking = false
+    @Environment(\.openURL) var openURL
+    @State private var showThanks = false
     
     var body: some View {
-        Button(action: {}, label: {
+        Button(action: { presentNotWorking.toggle() }, label: {
             VStack(alignment: .leading) {
                 
                 Image(product.image)
@@ -28,6 +33,12 @@ struct ProductCell: View {
                             .shadow(radius: 10)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
                     )
+                    .alert(isPresented: $presentNotWorking) {
+                        Alert(title: Text("No store for now"),
+                              message: Text("To have the best shop experience on mobile, I need FAHPAHTAH teespring.com API access to integrate a complete 🚽 merch store. 😝"),
+                              primaryButton: .default(Text("OK, I give you access 😎"), action: { openURL(URL(string: "https://twitter.com/messages/1449711853-1449711853?recipient_id=1449711853")!) }),
+                              secondaryButton: .cancel(Text("Maybe, I should hire you 😏")) { showThanks.toggle() })
+                    }
                 
                 Text(product.title.uppercased())
                     .font(.headline.italic())
@@ -38,6 +49,9 @@ struct ProductCell: View {
         })
         .foregroundColor(Color(.label))
         .buttonStyle(BounceButtonStyle())
+        .fullScreenCover(isPresented: $showThanks) {
+            HireHansFeaturesView()
+        }
     }
 }
 

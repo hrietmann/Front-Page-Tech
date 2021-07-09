@@ -9,41 +9,46 @@ import SwiftUI
 
 struct PodcastView: View {
     var body: some View {
-        VStack(spacing: 0) {
-            PodcastHeader()
-            ScrollView(showsIndicators: false) {
-                PodcastCover()
-                VStack(spacing: 0) {
-                    Section(header: {
-                        VStack {
-                            HStack {
-                                Text("Episodes".uppercased())
-                                    .font(.title2)
-                                    .fontWeight(.bold)
-                                Spacer()
-                                Button(action: {}) {
-                                    Text("See all")
-                                        .bold()
-                                        .foregroundColor(.pink)
+        NavigationView {
+            VStack(spacing: 0) {
+                PodcastHeader()
+                ScrollView(showsIndicators: false) {
+                    PodcastCover()
+                    VStack(spacing: 0) {
+                        Section(header: sectionHeader) {
+                            LazyVStack(spacing: 0) {
+                                ForEach(Podcast.list) { podcast in
+                                    PodcastRow(podcast: podcast)
                                 }
                             }
-                            .padding(.trailing)
-                            Divider()
                         }
-                        .padding(.leading)
-                        .padding(.top)
-                    }()) {
-                        LazyVStack(spacing: 0) {
-                            ForEach(Podcast.list) { podcast in
-                                PodcastRow(podcast: podcast)
-                            }
-                        }
-                    }
 
+                    }
                 }
             }
+            .navigationBarHidden(true)
+            .edgesIgnoringSafeArea(.all)
         }
-        .edgesIgnoringSafeArea(.all)
+    }
+    
+    var sectionHeader: some View {
+        VStack {
+            HStack {
+                Text("Episodes".uppercased())
+                    .font(.title2)
+                    .fontWeight(.bold)
+                Spacer()
+                NavigationLink(destination: PodcastsView()) {
+                    Text("See all")
+                        .bold()
+                        .foregroundColor(.pink)
+                }
+            }
+            .padding(.trailing)
+            Divider()
+        }
+        .padding(.leading)
+        .padding(.top)
     }
 }
 

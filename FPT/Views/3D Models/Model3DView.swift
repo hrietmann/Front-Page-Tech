@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Views
+
 
 
 struct Model3DView: View {
@@ -58,7 +60,11 @@ struct Model3DView: View {
     }
     
     var validateButton: some View {
-        Button(action: { manager.isPlaced.toggle() }) {
+        Button(action: {
+            manager.isPlaced.toggle()
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(manager.isPlaced ? .success:.error)
+        }) {
             Image(systemName: manager.isPlaced ? "xmark" : "checkmark")
                 .font(.title2.bold())
                 .padding(24)

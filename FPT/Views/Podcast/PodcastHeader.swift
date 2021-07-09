@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Views
 
 struct PodcastHeader: View {
     private let iconSize: CGFloat = 20
@@ -20,34 +21,13 @@ struct PodcastHeader: View {
                     .foregroundColor(Color.white)
                     .padding(.vertical, 20)
                 Spacer()
-                search
-                account
+                SeachHeaderButton(color: .white)
+                AccountView()
             }
         }
         .padding(.horizontal)
         .background(Color("podcast"))
         .buttonStyle(BounceButtonStyle())
-    }
-    
-    var account: some View {
-        Button(action: {}) {
-            Image("john")
-                .resizable()
-                .frame(width: 40, height: 40)
-                .aspectRatio(contentMode: .fill)
-                .clipShape(Circle())
-        }
-    }
-    
-    var search: some View {
-        Button(action: {}) {
-            Image(systemName: "magnifyingglass")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: iconSize, height: iconSize)
-                .padding(.vertical)
-        }
-        .foregroundColor(Color.white)
     }
     
     

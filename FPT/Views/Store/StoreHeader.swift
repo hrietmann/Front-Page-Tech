@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import Views
+
 
 struct StoreHeader: View {
     private let iconSize: CGFloat = 20
+    @State private var presentUnderConstruction = false
+    
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 0) {
@@ -19,15 +23,9 @@ struct StoreHeader: View {
                 
                 HStack(spacing: 26) {
                     
-                    Button(action: {}) {
-                        Image(systemName: "magnifyingglass")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: iconSize, height: iconSize)
-                            .padding(.vertical)
-                    }
+                    SeachHeaderButton()
                     
-                    Button(action: {}, label: {
+                    Button(action: { presentUnderConstruction.toggle() }, label: {
                         Image(systemName: "shippingbox.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
@@ -35,13 +33,7 @@ struct StoreHeader: View {
                             .padding(.vertical)
                     })
                     
-                    Button(action: {}) {
-                        Image("john")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                    }
+                    AccountView()
                 }
                 .foregroundColor(Color(.label))
                 .buttonStyle(BounceButtonStyle())
@@ -50,6 +42,9 @@ struct StoreHeader: View {
             .frame(height: UIScreen.main.bounds.width * 0.2)
             .zIndex(-2)
             Divider()
+        }
+        .sheet(isPresented: $presentUnderConstruction) {
+            UnderConstructionView(closeButton: true)
         }
     }
 }

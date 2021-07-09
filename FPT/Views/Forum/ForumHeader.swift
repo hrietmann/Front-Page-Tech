@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import Views
 
 struct ForumHeader: View {
     private let iconSize: CGFloat = 20
+    @State private var presentUnderConstruction = false
+    
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 0) {
@@ -18,16 +21,11 @@ struct ForumHeader: View {
                 Spacer()
                 
                 HStack(spacing: 30) {
-                    Button(action: {}) {
-                        Image(systemName: "magnifyingglass")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: iconSize, height: iconSize)
-                            .padding(.vertical)
-                    }
-                    .foregroundColor(Color(.label))
+                    SeachHeaderButton()
                     
-                    Button(action: {}) {
+                    Button(action: {
+                        presentUnderConstruction.toggle()
+                    }) {
                         Image(systemName: "square.and.pencil")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
@@ -35,13 +33,7 @@ struct ForumHeader: View {
                             .padding(.vertical)
                     }
                     
-                    Button(action: {}) {
-                        Image("john")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                    }
+                    AccountView()
                 }
                 .buttonStyle(BounceButtonStyle())
                 .padding()
@@ -65,18 +57,26 @@ struct ForumHeader: View {
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color(.tertiarySystemFill))
-            .overlay(
-                Image(systemName: "line.3.horizontal.decrease")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: iconSize, height: iconSize)
-                    .foregroundColor(Color(UIColor.tertiaryLabel))
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-            )
+            .overlay(filter)
             
             Divider()
         }
+        .sheet(isPresented: $presentUnderConstruction) {
+            UnderConstructionView(closeButton: true)
+        }
+    }
+    
+    var filter: some View {
+        Button(action: { presentUnderConstruction.toggle() }, label: {
+        Image(systemName: "line.3.horizontal.decrease")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: iconSize, height: iconSize)
+            .foregroundColor(Color(UIColor.tertiaryLabel))
+    })
+            .buttonStyle(BounceButtonStyle())
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .trailing)
     }
 }
 

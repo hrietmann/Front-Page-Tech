@@ -6,8 +6,13 @@
 //
 
 import SwiftUI
+import Views
+
 
 struct PodcastCover: View {
+    
+    @State private var presentNotWorking = false
+     
     var body: some View {
         VStack(spacing: 16) {
             
@@ -26,7 +31,7 @@ struct PodcastCover: View {
                 .font(.footnote)
                 .foregroundColor(Color(.cyan).opacity(0.8))
             
-            Button(action: {}) {
+            Button(action: { presentNotWorking.toggle() }) {
                 Label("Play", systemImage: "play.fill")
                     .padding(.vertical)
                     .font(.headline.weight(.bold))
@@ -34,6 +39,9 @@ struct PodcastCover: View {
                     .frame(width: UIScreen.main.bounds.width * 0.8)
                     .background(Color.white)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .alert(isPresented: $presentNotWorking) {
+                Alert(title: Text("I can't, sir… 😪"), message: Text("I know, that's disapointing… But you know, that's already a lot done considering this app was built in only 3 days and in the toilets on a 13‘‘ MacBook. 😂"), dismissButton: .cancel(Text("That's already very cool ! 👌🏻")))
             }
             
             Text("Though this show is hosted bu Jon Prosser and Sam Kohl, this id DEFINITELY not a podcast about Apple. Nope. Huh uh.")

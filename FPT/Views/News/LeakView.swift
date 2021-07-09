@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LeakView: View {
     var body: some View {
-        Text("Got a leak ?")
+        UnderConstructionView(closeButton: false)
     }
 }
 

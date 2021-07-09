@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import Views
+
 
 struct Models3DHeader: View {
-    private let iconSize: CGFloat = 20
+    
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 0) {
@@ -18,22 +20,9 @@ struct Models3DHeader: View {
                 Spacer()
                 
                 HStack(spacing: 30) {
-                    Button(action: {}) {
-                        Image(systemName: "magnifyingglass")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: iconSize, height: iconSize)
-                            .padding(.vertical)
-                    }
-                    .foregroundColor(Color(.label))
+                    SeachHeaderButton()
                     
-                    Button(action: {}) {
-                        Image("john")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                    }
+                    AccountView()
                 }
                 .buttonStyle(BounceButtonStyle())
                 .padding()

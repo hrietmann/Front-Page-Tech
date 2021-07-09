@@ -7,34 +7,30 @@
 
 import SwiftUI
 import Combine
+import FeedKit
 
 
 
-
-class HomeManager: ObservableObject {
-    
-    static let shared = HomeManager()
-    private init() {}
-    
-    @Published var menu = Menu.list[0]
-    @Published var showArticle: Article? = nil
-}
 
 
 
 
 struct HomeView: View {
     
-    @Namespace private var namespace
     @StateObject private var manager = HomeManager.shared
     
     var body: some View {
         ZStack {
-            TabsView(namespace: namespace)
+            TabsView()
             
-            if let article = manager.showArticle {
-                ArticlePage(article: article, namespace: namespace)
+            if let page = manager.present {
+                page
+                    .zIndex(1)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+//            if let article = manager.showArticle {
+//                ArticlePage(dummy: article, frame: .zero)
+//            }
         }
     }
 }

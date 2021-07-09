@@ -10,8 +10,8 @@ import SwiftUI
 struct StoreView: View {
     
     let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
+        GridItem(.flexible(), alignment: .topLeading),
+        GridItem(.flexible(), alignment: .topLeading)
     ]
     
     var body: some View {

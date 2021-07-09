@@ -15,7 +15,7 @@ class Model3DManager: ObservableObject {
     
     
     let model: Model
-    @Published private(set) var result: Result<ModelEntity, Error>? = .none
+    @Published private(set) var result: Result<ModelEntity, Swift.Error>? = .none
     @Published var loadedModel: ModelEntity? = .none
     @Published var isPlaced = false
     private var modelLoadLisnter: AnyCancellable? = nil
@@ -31,7 +31,8 @@ class Model3DManager: ObservableObject {
     
     
     private func load3DModel() {
-        modelLoadLisnter = ModelEntity.loadModelAsync(named: model.file)
+        guard let file = model.usdzFile else { return }
+        modelLoadLisnter = ModelEntity.loadModelAsync(named: file)
             .sink { completion in
                 switch completion {
                 case .failure(let error): self.result = .failure(error)

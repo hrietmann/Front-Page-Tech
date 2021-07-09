@@ -10,6 +10,7 @@ import SwiftUI
 struct CommentView: View {
     
     let comment: Comment
+    @State private var presentUnderConstruction = false
     
     var body: some View {
         VStack(spacing: 16) {
@@ -62,10 +63,16 @@ struct CommentView: View {
             .padding(.top)
             .font(.footnote)
         }
+        .onTapGesture {
+            presentUnderConstruction.toggle()
+        }
         .padding(22)
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 6))
         .padding(.horizontal)
+        .sheet(isPresented: $presentUnderConstruction) {
+            UnderConstructionView(closeButton: true)
+        }
     }
 }
 

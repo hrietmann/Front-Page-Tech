@@ -2,12 +2,39 @@
   "object": {
     "pins": [
       {
+        "package": "FeedKit",
+        "repositoryURL": "https://github.com/nmdias/FeedKit.git",
+        "state": {
+          "branch": null,
+          "revision": "68493a33d862c33c9a9f67ec729b3b7df1b20ade",
+          "version": "9.1.2"
+        }
+      },
+      {
+        "package": "SwiftSoup",
+        "repositoryURL": "https://github.com/scinfu/SwiftSoup.git",
+        "state": {
+          "branch": null,
+          "revision": "774dc9c7213085db8aa59595e27c1cd22e428904",
+          "version": "2.3.2"
+        }
+      },
+      {
+        "package": "SwiftUI-Shimmer",
+        "repositoryURL": "https://github.com/markiv/SwiftUI-Shimmer.git",
+        "state": {
+          "branch": null,
+          "revision": "5b2e81191e77f66e6c6ca497f11a77fe48f7f0fc",
+          "version": "1.0.0"
+        }
+      },
+      {
         "package": "Views",
         "repositoryURL": "https://github.com/hrietmann/Views.git",
         "state": {
           "branch": null,
-          "revision": "6f9d0006b15a56cb428138ae8d9f2ce3b332ea1e",
-          "version": "0.0.6"
+          "revision": "d04a1566dcfce05415f94f72153c69a49c449a90",
+          "version": "0.0.14"
         }
       }
     ]

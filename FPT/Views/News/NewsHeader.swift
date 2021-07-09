@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import Views
 
 struct NewsHeader: View {
-    private let iconSize: CGFloat = 20
+    @State private var presentNotifWorkInProgress = false
+    @State private var presentMoreDetails = false
+    
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 0) {
@@ -20,31 +23,28 @@ struct NewsHeader: View {
                 Spacer()
                 
                 HStack(spacing: 30) {
-                    Button(action: {}) {
-                        Image(systemName: "magnifyingglass")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: iconSize, height: iconSize)
-                            .padding(.vertical)
-                    }
-                    .foregroundColor(Color(.label))
+                    SeachHeaderButton()
                     
-                    Button(action: {}, label: {
+                    Button(action: { presentNotifWorkInProgress.toggle() }, label: {
                         Image(systemName: "bell.badge.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: iconSize, height: iconSize)
+                            .frame(width: 20, height: 20)
                             .padding(.vertical)
                     })
                     .foregroundColor(Color(.label))
-                    
-                    Button(action: {}) {
-                        Image("john")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
+                    .alert(isPresented: $presentNotifWorkInProgress, content: {
+                        Alert(title: Text("Well…"),
+                              message: Text("Sometimes, it's better to wait until things are ready… This really looks like s**t right now… 💩"),
+                              primaryButton: .default(Text("Tell me more…"),
+                                                      action: { DispatchQueue.main.async { presentMoreDetails.toggle() } }),
+                              secondaryButton: .cancel(Text("🚽")))
+                    })
+                    .sheet(isPresented: $presentMoreDetails) {
+                        NotificationsBetaFeaturesView()
                     }
+                    
+                    AccountView()
                 }
                 .buttonStyle(BounceButtonStyle())
                 .padding()
