@@ -25,6 +25,7 @@
 		1C78F146268766DD009E4C0C /* WarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C78F145268766DD009E4C0C /* WarningView.swift */; };
 		1C78F14926876745009E4C0C /* NotificationsBetaFeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C78F14826876745009E4C0C /* NotificationsBetaFeaturesView.swift */; };
 		1C78F14B26877058009E4C0C /* HireHansFeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C78F14A26877058009E4C0C /* HireHansFeaturesView.swift */; };
+		1C9A717A2698396300925104 /* ViewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1C9A71792698396300925104 /* ViewKit */; };
 		1CA4708C268520C60024C9EC /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA4708B268520C60024C9EC /* AccountView.swift */; };
 		1CA4708E268521290024C9EC /* SeachHeaderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA4708D268521290024C9EC /* SeachHeaderButton.swift */; };
 		1CADFDC226848223000830B9 /* iPhone 13 Pro Bronze.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 1CADFDC126848222000830B9 /* iPhone 13 Pro Bronze.usdz */; };
@@ -36,7 +37,6 @@
 		1CB0F7DF2686291500744FDC /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1CB0F7DE2686291500744FDC /* FeedKit */; };
 		1CB0F7E426863DB300744FDC /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 1CB0F7E326863DB300744FDC /* SwiftSoup */; };
 		1CB0F7E8268742B900744FDC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB0F7E7268742B900744FDC /* AppDelegate.swift */; };
-		1CB7665F2678195100D008BA /* Views in Frameworks */ = {isa = PBXBuildFile; productRef = 1CB7665E2678195100D008BA /* Views */; };
 		1CB766612678197C00D008BA /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB766602678197C00D008BA /* NewsView.swift */; };
 		1CB7666326781E2900D008BA /* TabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB7666226781E2900D008BA /* TabsView.swift */; };
 		1CB7666A2678309D00D008BA /* ForumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB766692678309D00D008BA /* ForumView.swift */; };
@@ -133,8 +133,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C78F14226875353009E4C0C /* Shimmer in Frameworks */,
-				1CB7665F2678195100D008BA /* Views in Frameworks */,
 				1CB0F7DF2686291500744FDC /* FeedKit in Frameworks */,
+				1C9A717A2698396300925104 /* ViewKit in Frameworks */,
 				1CB0F7E426863DB300744FDC /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -391,10 +391,10 @@
 			);
 			name = FPT;
 			packageProductDependencies = (
-				1CB7665E2678195100D008BA /* Views */,
 				1CB0F7DE2686291500744FDC /* FeedKit */,
 				1CB0F7E326863DB300744FDC /* SwiftSoup */,
 				1C78F14126875353009E4C0C /* Shimmer */,
+				1C9A71792698396300925104 /* ViewKit */,
 			);
 			productName = FPT;
 			productReference = 1CD05E97267405CF00D7C68A /* FPT.app */;
@@ -425,10 +425,10 @@
 			);
 			mainGroup = 1CD05E8E267405CF00D7C68A;
 			packageReferences = (
-				1CB7665D2678195100D008BA /* XCRemoteSwiftPackageReference "Views" */,
 				1CB0F7DD2686291500744FDC /* XCRemoteSwiftPackageReference "FeedKit" */,
 				1CB0F7E226863DB300744FDC /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				1C78F14026875353009E4C0C /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
+				1C9A71782698396300925104 /* XCRemoteSwiftPackageReference "ViewKit" */,
 			);
 			productRefGroup = 1CD05E98267405CF00D7C68A /* Products */;
 			projectDirPath = "";
@@ -760,6 +760,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		1C9A71782698396300925104 /* XCRemoteSwiftPackageReference "ViewKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hrietmann/ViewKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.9;
+			};
+		};
 		1CB0F7DD2686291500744FDC /* XCRemoteSwiftPackageReference "FeedKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nmdias/FeedKit.git";
@@ -776,14 +784,6 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		1CB7665D2678195100D008BA /* XCRemoteSwiftPackageReference "Views" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hrietmann/Views.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.5;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -791,6 +791,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1C78F14026875353009E4C0C /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */;
 			productName = Shimmer;
+		};
+		1C9A71792698396300925104 /* ViewKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1C9A71782698396300925104 /* XCRemoteSwiftPackageReference "ViewKit" */;
+			productName = ViewKit;
 		};
 		1CB0F7DE2686291500744FDC /* FeedKit */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -801,11 +806,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1CB0F7E226863DB300744FDC /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
-		};
-		1CB7665E2678195100D008BA /* Views */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1CB7665D2678195100D008BA /* XCRemoteSwiftPackageReference "Views" */;
-			productName = Views;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

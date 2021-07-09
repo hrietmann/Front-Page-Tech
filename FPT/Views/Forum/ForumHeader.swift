@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Views
+import ViewKit
 
 struct ForumHeader: View {
     private let iconSize: CGFloat = 20

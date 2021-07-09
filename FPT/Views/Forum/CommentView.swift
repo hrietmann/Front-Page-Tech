@@ -37,7 +37,7 @@ struct CommentView: View {
             Text(comment.comment)
                 .font(.footnote)
                 .fontWeight(.medium)
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             HStack(spacing: 16) {
                 HStack(spacing: 6) {

@@ -29,12 +29,12 @@
         }
       },
       {
-        "package": "Views",
-        "repositoryURL": "https://github.com/hrietmann/Views.git",
+        "package": "ViewKit",
+        "repositoryURL": "https://github.com/hrietmann/ViewKit.git",
         "state": {
           "branch": null,
-          "revision": "d04a1566dcfce05415f94f72153c69a49c449a90",
-          "version": "0.0.14"
+          "revision": "a9d505dd37c565b0409514d5f7cf7f2d9bef8d64",
+          "version": "0.0.23"
         }
       }
     ]

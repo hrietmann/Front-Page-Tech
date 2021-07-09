@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Views
+import ViewKit
 
 
 struct ProductCell: View {

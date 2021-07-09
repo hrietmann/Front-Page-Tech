@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Views
+import ViewKit
 
 struct NewsHeader: View {
     @State private var presentNotifWorkInProgress = false

@@ -7,7 +7,7 @@
 
 import SwiftUI
 import SceneKit
-import Views
+import ViewKit
 
 
 struct Model3DCell: View {
