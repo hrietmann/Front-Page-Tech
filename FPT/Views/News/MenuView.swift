@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import SwiftUIX
+
 
 struct MenuView: View {
     
@@ -45,14 +47,14 @@ fileprivate struct SizeKey: PreferenceKey {
     }
 }
 
-extension View {
-    func captureSize(in binding: Binding<CGSize>) -> some View {
-        overlay(GeometryReader { proxy in
-            Color.clear.preference(key: SizeKey.self, value: proxy.size)
-        })
-            .onPreferenceChange(SizeKey.self) { size in binding.wrappedValue = size }
-    }
-}
+//extension View {
+//    func captureSize(in binding: Binding<CGSize>) -> some View {
+//        overlay(GeometryReader { proxy in
+//            Color.clear.preference(key: SizeKey.self, value: proxy.size)
+//        })
+//            .onPreferenceChange(SizeKey.self) { size in binding.wrappedValue = size }
+//    }
+//}
 
 fileprivate struct Rotated<Rotated: View>: View {
     var view: Rotated

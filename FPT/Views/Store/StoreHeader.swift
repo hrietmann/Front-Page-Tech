@@ -33,7 +33,7 @@ struct StoreHeader: View {
                             .padding(.vertical)
                     })
                     
-                    AccountView()
+                    AccountAvatarView()
                 }
                 .foregroundColor(Color(.label))
                 .buttonStyle(BounceButtonStyle())

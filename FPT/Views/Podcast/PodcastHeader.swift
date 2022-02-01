@@ -22,7 +22,7 @@ struct PodcastHeader: View {
                     .padding(.vertical, 20)
                 Spacer()
                 SeachHeaderButton(color: .white)
-                AccountView()
+                AccountAvatarView()
             }
         }
         .padding(.horizontal)

@@ -33,7 +33,7 @@ struct ForumHeader: View {
                             .padding(.vertical)
                     }
                     
-                    AccountView()
+                    AccountAvatarView()
                 }
                 .buttonStyle(BounceButtonStyle())
                 .padding()

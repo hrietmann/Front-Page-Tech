@@ -3,4 +3,69 @@
    uuid = "1491A714-0EFB-4C9E-A751-33316F432BE7"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4289957D-184A-417F-A6F3-3CFEA3FAF57F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FPT/Helpers/Authenticator.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "137"
+            endingLineNumber = "137"
+            landmarkName = "change(profile:of:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "4289957D-184A-417F-A6F3-3CFEA3FAF57F - 6fee6d38c68660ce"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "FPT.Authenticator.change(profile: Swift.Optional&lt;__C.UIImage&gt;, of: FPT.User) async throws -&gt; ()"
+                  moduleName = "FPT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hansrietmann/Documents/Projects/Front%20Page%20Tech/FPT/FPT/Helpers/Authenticator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "137"
+                  endingLineNumber = "137"
+                  offsetFromSymbolStart = "5265">
+               </Location>
+               <Location
+                  uuid = "4289957D-184A-417F-A6F3-3CFEA3FAF57F - cc0a2916d1bcc974"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) await resume partial function for FPT.Authenticator.change(profile: Swift.Optional&lt;__C.UIImage&gt;, of: FPT.User) async throws -&gt; ()"
+                  moduleName = "FPT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hansrietmann/Documents/Projects/Front%20Page%20Tech/FPT/FPT/Helpers/Authenticator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "137"
+                  endingLineNumber = "137"
+                  offsetFromSymbolStart = "3461">
+               </Location>
+               <Location
+                  uuid = "4289957D-184A-417F-A6F3-3CFEA3FAF57F - 65c668de023def55"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for FPT.Authenticator.change(profile: Swift.Optional&lt;__C.UIImage&gt;, of: FPT.User) async throws -&gt; ()"
+                  moduleName = "FPT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hansrietmann/Documents/Projects/Front%20Page%20Tech/FPT/FPT/Helpers/Authenticator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "137"
+                  endingLineNumber = "137"
+                  offsetFromSymbolStart = "1539">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

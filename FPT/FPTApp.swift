@@ -6,14 +6,19 @@
 //
 
 import SwiftUI
+import AuthenticationKit
 
 @main
 struct FPTApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @StateObject private var authManager = AuthenticationManager(authenticator: Authenticator())
+    @StateObject private var homeManager = HomeManager.shared
     
     var body: some Scene {
         WindowGroup {
             HomeView()
+                .environmentObject(authManager)
+                .environmentObject(homeManager)
         }
     }
 }

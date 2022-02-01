@@ -34,13 +34,8 @@ struct NewsFeed: View {
                 content(articles: articles, items: nil)
             } else {
                 switch manager.state {
-                case .waiting, .loading:
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .transition(.opacity.combined(with: .offset(y: 16)))
-                case .failure(let error):
-                    Text(error.localizedDescription)
-                        .transition(.opacity.combined(with: .offset(y: 16)))
+                case .waiting, .loading: loadView
+                case .failure(let error): ErrorView(error: error.localizedDescription) { .init(completion: manager.load) }
                 case .success(let items):
                     content(articles: nil, items: items)
                         .transition(.opacity.combined(with: .offset(y: 16)))
@@ -48,6 +43,24 @@ struct NewsFeed: View {
             }
         }
         .animation(.spring())
+    }
+    
+    var loadView: some View {
+        ScrollView(showsIndicators: false) {
+            LazyVStack(spacing: 16 * 6) {
+                ForEach(0..<10, id: \.self) { i in
+                    ArticleView(item: nil)
+                        .opacity(didAppear ? 1:0)
+                        .offset(y: didAppear ? 0:100)
+                        .transition(.identity)
+                }
+            }
+            .padding(.vertical, 16 * 2)
+            .transition(.opacity.combined(with: .offset(y: 16)))
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .allowsHitTesting(false)
+        .redacted(reason: [.placeholder])
     }
     
     func content(articles: [Article]?, items: [RSSFeedItem]?) -> some View {

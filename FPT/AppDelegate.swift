@@ -7,11 +7,20 @@
 
 import Foundation
 import UIKit
+import Firebase
 
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         setUPURLCache()
+        FirebaseApp.configure()
+        
+        #if DEBUG
+        configureDevelopmentProfile()
+        #else
+        configureProductionProfile()
+        #endif
+        
         return true
     }
     
@@ -21,5 +30,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         let cache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: "cachedFiles")
         URLCache.shared = cache
         URLSession.shared.configuration.urlCache = cache
+    }
+    
+    private func configureDevelopmentProfile() {
+        Auth.auth().useEmulator(withHost: "localhost", port: 9099)
+        Storage.storage().useEmulator(withHost: "localhost", port: 9199)
+    }
+    
+    private func configureProductionProfile() {
+        
     }
 }

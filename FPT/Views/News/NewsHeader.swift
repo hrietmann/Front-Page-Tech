@@ -44,7 +44,7 @@ struct NewsHeader: View {
                         NotificationsBetaFeaturesView()
                     }
                     
-                    AccountView()
+                    AccountAvatarView()
                 }
                 .buttonStyle(BounceButtonStyle())
                 .padding()

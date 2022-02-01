@@ -19,7 +19,7 @@ struct ArticleView: View {
     @State private var present = false
     @Namespace var namespace
     
-    init(item: RSSFeedItem) {
+    init(item: RSSFeedItem?) {
         manager = ArticleManager(feed: item)
     }
     

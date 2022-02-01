@@ -22,7 +22,7 @@ struct Models3DHeader: View {
                 HStack(spacing: 30) {
                     SeachHeaderButton()
                     
-                    AccountView()
+                    AccountAvatarView()
                 }
                 .buttonStyle(BounceButtonStyle())
                 .padding()

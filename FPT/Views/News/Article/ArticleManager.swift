@@ -17,12 +17,12 @@ import SwiftSoup
 class ArticleManager: ObservableObject {
     
     
-    private let feedItem: RSSFeedItem
+    private let feedItem: RSSFeedItem?
     @Published private(set) var image = ManagerState<Image>.waiting
     @Published private(set) var article = ManagerState<Article>.waiting
     
     
-    init(feed item: RSSFeedItem) {
+    init(feed item: RSSFeedItem?) {
         self.feedItem = item
         loadHTML()
     }
@@ -30,6 +30,10 @@ class ArticleManager: ObservableObject {
     
     
     private func loadHTML() {
+        guard let feedItem = feedItem else {
+            return
+        }
+
         image = .loading
         article = .loading
         let pageLink = feedItem.id
@@ -52,7 +56,11 @@ class ArticleManager: ObservableObject {
                 guard let data = data else { return }
                 guard let html = String(data: data, encoding: .ascii) else { fatalError() }
                 do {
-                    let article = try Article(from: html, of: self.feedItem)
+                    guard let feedItem = self.feedItem else {
+                        return
+                    }
+
+                    let article = try Article(from: html, of: feedItem)
                     DispatchQueue.main.async {
                         self.article = .success(result: article)
                     }
