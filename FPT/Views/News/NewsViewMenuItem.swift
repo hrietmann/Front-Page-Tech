@@ -10,7 +10,7 @@ import SwiftUI
 
 
 
-struct MenuItem: View {
+struct NewsViewMenuItem: View {
     
     let menu: Menu
     @Binding var selected: Menu
@@ -36,6 +36,6 @@ struct MenuItem: View {
 
 struct MenuItem_Previews: PreviewProvider {
     static var previews: some View {
-        MenuItem(menu: Menu.list[0], selected: .constant(Menu.list[0]))
+        NewsViewMenuItem(menu: Menu.list[0], selected: .constant(Menu.list[0]))
     }
 }

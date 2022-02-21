@@ -14,8 +14,9 @@ struct AuthenticationView: View {
     
     
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var authenticationManager: AuthenticationManager<Authenticator>
+    @EnvironmentObject private var authManager: AuthManager<Authenticator>
     @State private var presentLogIn = false
+    @State private var presentError = false
     
     
     var body: some View {
@@ -34,7 +35,7 @@ struct AuthenticationView: View {
                         .frame(maxHeight: .infinity)
                     
                     Button {
-                        
+                        authManager.signInWithApple()
                     } label: {
                         HStack(alignment: .center, spacing: 16) {
                             Image(systemName: "applelogo")
@@ -74,12 +75,6 @@ struct AuthenticationView: View {
                             .foregroundColor(.white)
                     }
                     .buttonStyle(BounceButtonStyle())
-                    
-                    Button {
-                        
-                    } label: {
-                        
-                    }
                     
                     Button {
                         dismiss.callAsFunction()
@@ -128,6 +123,14 @@ struct AuthenticationView: View {
             }
         }
         .navigationBarHidden(true)
+        .onReceive(authManager.$error) { error in
+            presentError = error != nil
+        }
+        .alert("Error", isPresented: $presentError) {
+            
+        } message: {
+            Text(authManager.error?.localizedDescription ?? "Unknown error")
+        }
     }
 }
 
@@ -136,6 +139,6 @@ struct AuthenticationView_Previews: PreviewProvider {
         NavigationView {
             AuthenticationView()
         }
-        .environmentObject(AuthenticationManager(authenticator: Authenticator()))
+        .environmentObject(AuthManager(authenticator: Authenticator()))
     }
 }

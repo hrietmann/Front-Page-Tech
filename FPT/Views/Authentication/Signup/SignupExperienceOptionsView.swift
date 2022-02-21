@@ -78,6 +78,6 @@ struct SignupExperienceOptionsView_Previews: PreviewProvider {
         NavigationView {
             SignupExperienceOptionsView()
         }
-        .environmentObject(AuthenticationManager(authenticator: Authenticator()))
+        .environmentObject(AuthManager(authenticator: Authenticator()))
     }
 }

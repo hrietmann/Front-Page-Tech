@@ -10,13 +10,13 @@ import Foundation
 
 
 
-enum ManagerState<Result> {
+enum ManagerState<Result: Equatable>: Equatable {
     case waiting
     case loading
-    case failure(error: Error)
+    case failure(error: FPTError)
     case success(result: Result)
     
-    var error: Error? {
+    var error: FPTError? {
         if case .failure(let error) = self {
             return error
         } else { return nil }
@@ -40,5 +40,14 @@ enum ManagerState<Result> {
     
     var isWaitingOrLoading: Bool {
         return isWaiting || isLoading
+    }
+    
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        if let error = lhs.error, error == rhs.error { return true }
+        if let result = lhs.result, result == rhs.result { return true }
+        if lhs.isWaiting, rhs.isWaiting { return true }
+        if lhs.isLoading, rhs.isLoading { return true }
+        return false
     }
 }

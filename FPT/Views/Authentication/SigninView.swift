@@ -20,10 +20,11 @@ struct SigninView: View {
         }
     
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var authenticationManager: AuthenticationManager<Authenticator>
+    @EnvironmentObject private var authManager: AuthManager<Authenticator>
     @State private var presentPasswordReset = false
     @FocusState private var focusedField: Field?
     @State private var presentError = false
+    @State private var dismissing = false
     
     var body: some View {
         NavigationView {
@@ -34,7 +35,7 @@ struct SigninView: View {
                     .multilineTextAlignment(.center)
                     .padding()
                     .padding(.horizontal)
-                TextField("Email", text: $authenticationManager.emailEntry)
+                TextField("Email", text: $authManager.emailEntry)
                     .textFieldStyle(.frontPageTech(icon: "envelope.fill", check: emailCheck))
                     .focused($focusedField, equals: .emailAddress)
                     .keyboardType(.emailAddress)
@@ -44,7 +45,7 @@ struct SigninView: View {
                     .disableAutocorrection(true)
                     .submitLabel(.next)
                 
-                TextField("Password", text: $authenticationManager.passwordEntry)
+                TextField("Password", text: $authManager.passwordEntry)
                     .textFieldStyle(.frontPageTech(icon: "key.fill", check: passwordCheck))
                     .textContentType(.password)
                     .focused($focusedField, equals: .password)
@@ -53,7 +54,7 @@ struct SigninView: View {
                 Spacer()
                 Button(action: signin) {
                     Group {
-                        if authenticationManager.state.isLoading {
+                        if authManager.state.isLoading {
                             ProgressView()
                         } else {
                             Text("Next")
@@ -88,7 +89,7 @@ struct SigninView: View {
                 }
 
             }
-            .disabled(!authenticationManager.state.isDisconnected)
+            .disabled(!authManager.state.isDisconnected)
             .padding()
             .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -104,8 +105,9 @@ struct SigninView: View {
                             .foregroundColor(.label)
                     }
                 }
-                .onReceive(authenticationManager.$state) { state in
-                    guard state.isConnected else { return }
+                .onReceive(authManager.$state) { state in
+                    guard state.isConnected, dismissing == false else { return }
+                    dismissing = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         let alertView = SPAlertView(
                             title: "Welcome back!",
@@ -116,13 +118,13 @@ struct SigninView: View {
                         alertView.present(haptic: .success, completion: nil)
                     }
                 }
-                .onReceive(authenticationManager.$error) { error in
+                .onReceive(authManager.$error) { error in
                     presentError = error != nil
                 }
                 .alert("Error", isPresented: $presentError) {
                     
                 } message: {
-                    Text(authenticationManager.error?.localizedDescription ?? "")
+                    Text(authManager.error?.localizedDescription ?? "")
                 }
                 .onSubmit {
                     switch focusedField {
@@ -141,26 +143,26 @@ struct SigninView: View {
     }
     
     private var canGoToNext: Bool {
-        !authenticationManager.emailEntry.isEmpty &&
-        authenticationManager.emailEntry.isValidEmail &&
-        !authenticationManager.passwordEntry.isEmpty
+        !authManager.emailEntry.isEmpty &&
+        authManager.emailEntry.isValidEmail &&
+        !authManager.passwordEntry.isEmpty
     }
     
     private var emailCheck: FPTTextFieldStyle.CheckState {
-        guard !authenticationManager.emailEntry.isEmpty else { return .none }
-        if let error = authenticationManager.emailError, focusedField == nil
+        guard !authManager.emailEntry.isEmpty else { return .none }
+        if let error = authManager.emailError, focusedField == nil
         { return .invalid(error.localizedDescription) }
-        return authenticationManager.emailEntry.isValidEmail ? .valid : .none
+        return authManager.emailEntry.isValidEmail ? .valid : .none
     }
     
     private var passwordCheck: FPTTextFieldStyle.CheckState {
-        guard authenticationManager.passwordEntry.isEmpty else { return authenticationManager.passwordEntry.count >= 6 ? .valid : .none }
+        guard authManager.passwordEntry.isEmpty else { return authManager.passwordEntry.count >= 6 ? .valid : .none }
         guard focusedField == nil else { return .none }
         return .invalid("Password missing")
     }
     
     private func signin() {
-        authenticationManager.signIn()
+        authManager.signIn()
     }
     
 }
@@ -168,6 +170,6 @@ struct SigninView: View {
 struct SigninView_Previews: PreviewProvider {
     static var previews: some View {
         SigninView()
-            .environmentObject(AuthenticationManager(authenticator: Authenticator()))
+            .environmentObject(AuthManager(authenticator: Authenticator()))
     }
 }

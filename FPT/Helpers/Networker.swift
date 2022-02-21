@@ -21,7 +21,7 @@ class Networker {
         self.link = link
     }
     
-    func request<Result:Codable>(_ result: Result.Type, _ completion: @escaping (Swift.Result<Result, Error>) -> ()) {
+    func request<Result:Codable>(_ result: Result.Type, _ completion: @escaping (Swift.Result<Result, FPTError>) -> ()) {
         guard let url = URL(string: link) else { completion(.failure(.incorrectURL(link: link))) ; return }
         let request = URLRequest(url: url)
         let session = URLSession.shared.dataTask(with: request) { data, response, error in

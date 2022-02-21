@@ -9,19 +9,19 @@ import SwiftUI
 import SwiftUIX
 
 
-struct MenuView: View {
+struct NewsViewMenu: View {
     
     @Binding var selected: Menu
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: 16 * 4) {
+            VStack(spacing: 16 * 2) {
                 ForEach(Menu.list) { section in
-                    MenuItem(menu: section, selected: $selected)
+                    NewsViewMenuItem(menu: section, selected: $selected)
                 }
             }
             .offset(x: -4)
-            .padding(.vertical, 32)
+            .padding(.vertical, 16 * 2)
         }
         .overlay(
             LinearGradient(gradient: Gradient(colors: [Color(.systemBackground), Color(.systemBackground).opacity(0)]), startPoint: .top, endPoint: .bottom)
@@ -35,7 +35,7 @@ struct MenuView: View {
 
 struct MenuView_Previews: PreviewProvider {
     static var previews: some View {
-        MenuView(selected: .constant(Menu.list[0]))
+        NewsViewMenu(selected: .constant(Menu.list[0]))
     }
 }
 

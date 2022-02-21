@@ -7,13 +7,18 @@
 
 import SwiftUI
 import AuthenticationKit
+import Shimmer
+import SPAlert
+
+
 
 struct PasswordResetRequestView: View {
     
-    @EnvironmentObject private var authenticationManager: AuthenticationManager<Authenticator>
+    @EnvironmentObject private var authManager: AuthManager<Authenticator>
     @Environment(\.dismiss) private var dismiss
     @FocusState private var focusedField: Bool?
     @State private var presentError = false
+    @State private var sendingResetEmail = false
     
     var body: some View {
         NavigationView {
@@ -24,6 +29,7 @@ struct PasswordResetRequestView: View {
                     .multilineTextAlignment(.center)
                     .padding()
                     .padding(.horizontal)
+                    .unredacted()
                 
                 Text("Enter your account email to receive a confirmation code.")
                     .font(.footnote)
@@ -32,7 +38,7 @@ struct PasswordResetRequestView: View {
                     .padding(.bottom)
                     .padding(.horizontal)
                 
-                TextField("Email", text: $authenticationManager.emailEntry)
+                TextField("Email", text: $authManager.emailEntry)
                     .textFieldStyle(.frontPageTech(icon: "envelope.fill", check: emailCheck))
                     .focused($focusedField, equals: true)
                     .keyboardType(.emailAddress)
@@ -45,7 +51,7 @@ struct PasswordResetRequestView: View {
                 Spacer()
                 Button(action: sendResetEmail) {
                     Group {
-                        if authenticationManager.state.isLoading {
+                        if authManager.state.isLoading, authManager.taskCompleted == false {
                             ProgressView()
                         } else {
                             Text("Send")
@@ -61,8 +67,13 @@ struct PasswordResetRequestView: View {
                 }
                 .disabled(!canSendEmail)
             }
-            .disabled(!authenticationManager.state.isDisconnected)
+            .shimmering(active: authManager.state.isLoading && !authManager.taskCompleted)
             .padding()
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                    focusedField = true
+                }
+            }
             .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .principal) {
@@ -82,26 +93,42 @@ struct PasswordResetRequestView: View {
                     guard canSendEmail else { return }
                     sendResetEmail()
                 }
-                .onReceive(authenticationManager.$error) { error in
+                .onReceive(authManager.$error) { error in
                     presentError = error != nil
+                }
+                .onReceive(authManager.$state) { state in
+                    guard state.isLoading == false, sendingResetEmail else { return }
+                    sendingResetEmail = false
+                    dismiss()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        let alertView = SPAlertView(
+                            title: "Email sent!",
+                            message: "Check your emails to finish your password reset! 📬",
+                            preset: .custom(.init(systemName: "paperplane.fill")!))
+                        alertView.dismissByTap = true
+                        alertView.duration = 4
+                        alertView.present(haptic: .success, completion: nil)
+                    }
                 }
         }
     }
     
     private var canSendEmail: Bool {
-        !authenticationManager.emailEntry.isEmpty &&
-        authenticationManager.emailEntry.isValidEmail
+        !authManager.emailEntry.isEmpty &&
+        authManager.emailEntry.isValidEmail
     }
     
     private var emailCheck: FPTTextFieldStyle.CheckState {
-        guard !authenticationManager.emailEntry.isEmpty else { return .none }
-        if let error = authenticationManager.emailError, focusedField == nil
+        guard !authManager.emailEntry.isEmpty else { return .none }
+        if let error = authManager.emailError, focusedField == nil
         { return .invalid(error.localizedDescription) }
-        return authenticationManager.emailEntry.isValidEmail ? .valid : .none
+        return authManager.emailEntry.isValidEmail ? .valid : .none
     }
     
     private func sendResetEmail() {
-        authenticationManager.sendPasswordResetEmail()
+        sendingResetEmail = true
+        authManager.sendPasswordResetEmail()
     }
 }
 

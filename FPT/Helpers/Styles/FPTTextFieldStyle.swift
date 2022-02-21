@@ -50,6 +50,7 @@ struct FPTTextFieldStyle: TextFieldStyle {
             HStack(spacing: 8) {
                 if let icon = icon {
                     Image(systemName: icon)
+                        .unredacted()
                 }
                 configuration
                 
@@ -58,6 +59,7 @@ struct FPTTextFieldStyle: TextFieldStyle {
                         .foregroundStyle(.white, .green)
                         .font(.title2)
                         .transition(.opacity.combined(with: .move(edge: .trailing)))
+                        .unredacted()
                 }
                 
                 if let message = check.message {
@@ -69,6 +71,7 @@ struct FPTTextFieldStyle: TextFieldStyle {
                     }
                     .font(.title2)
                     .transition(.opacity.combined(with: .move(edge: .trailing)))
+                    .unredacted()
                 }
             }
             .font(.headline.weight(.bold))

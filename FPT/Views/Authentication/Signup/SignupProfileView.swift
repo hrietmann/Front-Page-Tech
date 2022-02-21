@@ -13,7 +13,7 @@ import SPAlert
 
 struct SignupProfileView: View {
     
-    @EnvironmentObject private var authenticationManager: AuthenticationManager<Authenticator>
+    @EnvironmentObject private var authManager: AuthManager<Authenticator>
     @State private var presentImagePicker = false
     @State private var dismissing = false
     
@@ -35,7 +35,7 @@ struct SignupProfileView: View {
             
             Spacer()
             
-            if authenticationManager.state.isLoading {
+            if authManager.state.isLoading {
                 ProgressView()
                     .transition(
                         .move(edge: .bottom)
@@ -67,13 +67,13 @@ struct SignupProfileView: View {
                     .background(.tint)
                     .foregroundColor(.white)
             }
-            .disabled(authenticationManager.profileImage == nil)
+            .disabled(authManager.profileImage == nil)
             
             Button("Skip for now", action: signup)
             .font(.subheadline.weight(.bold))
             .padding(8)
         }
-        .disabled(authenticationManager.state.isLoading)
+        .disabled(authManager.state.isLoading)
         .padding()
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -85,11 +85,11 @@ struct SignupProfileView: View {
                     .foregroundColor(.accentColor)
             }
         }
-        .onReceive(authenticationManager.$state) { state in
+        .onReceive(authManager.$state) { state in
             guard state.isConnected, dismissing == false else { return }
             dismissing.toggle()
-            if authenticationManager.profileImage != nil {
-                authenticationManager.changeProfileImage()
+            if authManager.profileImage != nil {
+                authManager.changeProfileImage()
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 let alertView = SPAlertView(
@@ -113,7 +113,7 @@ struct SignupProfileView: View {
             profileAddButton
         }
         .fullScreenCover(isPresented: $presentImagePicker) {
-            ImagePicker(image: $authenticationManager.profileImage)
+            ImagePicker(image: $authManager.profileImage)
                 .allowsEditing(true)
                 .sourceType(.photoLibrary)
         }
@@ -122,7 +122,7 @@ struct SignupProfileView: View {
     
     var profileButtonLabel: some View {
         ZStack {
-            if let image = authenticationManager.profileImage {
+            if let image = authManager.profileImage {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
@@ -156,7 +156,7 @@ struct SignupProfileView: View {
     }
     
     private func signup() {
-        authenticationManager.signUp()
+        authManager.signUp()
     }
 }
 
@@ -165,6 +165,6 @@ struct SignupProfileView_Previews: PreviewProvider {
         NavigationView {
             SignupProfileView()
         }
-        .environmentObject(AuthenticationManager(authenticator: Authenticator()))
+        .environmentObject(AuthManager(authenticator: Authenticator()))
     }
 }

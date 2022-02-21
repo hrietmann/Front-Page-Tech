@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Firebase
+import FirebaseFirestore
 
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -15,11 +16,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         setUPURLCache()
         FirebaseApp.configure()
         
-        #if DEBUG
-        configureDevelopmentProfile()
-        #else
+//        #if DEBUG
+//        configureDevelopmentProfile()
+//        #else
         configureProductionProfile()
-        #endif
+//        #endif
         
         return true
     }
@@ -35,6 +36,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     private func configureDevelopmentProfile() {
         Auth.auth().useEmulator(withHost: "localhost", port: 9099)
         Storage.storage().useEmulator(withHost: "localhost", port: 9199)
+        
+        let firestoreSettings = Firestore.firestore().settings
+        firestoreSettings.host = "localhost:8080"
+        firestoreSettings.isPersistenceEnabled = false
+        firestoreSettings.isSSLEnabled = false
+        Firestore.firestore().settings = firestoreSettings
+        Firestore.firestore().useEmulator(withHost: "localhost", port: 8080)
     }
     
     private func configureProductionProfile() {

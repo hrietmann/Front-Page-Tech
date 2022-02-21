@@ -10,15 +10,18 @@ import AuthenticationKit
 
 @main
 struct FPTApp: App {
+    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @StateObject private var authManager = AuthenticationManager(authenticator: Authenticator())
+    @StateObject private var authManager = AuthManager(authenticator: Authenticator())
     @StateObject private var homeManager = HomeManager.shared
+    @StateObject private var podcastModel = PodcastViewModel()
     
     var body: some Scene {
         WindowGroup {
             HomeView()
                 .environmentObject(authManager)
                 .environmentObject(homeManager)
+                .environmentObject(podcastModel)
         }
     }
 }

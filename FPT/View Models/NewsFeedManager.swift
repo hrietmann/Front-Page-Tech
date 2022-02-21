@@ -79,7 +79,7 @@ class NewsFeedManager: ObservableObject {
             case .internalError(let reason):
                 message = serverError + "\n(\(reason))"
             }
-            self.state = .failure(error: Error(custom: message))
+            self.state = .failure(error: FPTError(custom: message))
         case .success(let feed):
             guard let rss = feed.rssFeed else {
                 self.state = .failure(error: .noRSSFeedFound(for: self.feed.link))

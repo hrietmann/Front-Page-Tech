@@ -17,14 +17,16 @@ struct StoreView: View {
     var body: some View {
         VStack(spacing: 0) {
             StoreHeader()
-            ScrollView(showsIndicators: false) {
-                LazyVGrid(columns: columns, alignment: .leading, spacing: 16) {
-                    ForEach(Product.list) { product in
-                        ProductCell(product: product)
-                    }
-                }
+            ErrorView(title: "Empty shelves 🤭", error: "We may or may not be preparing some new merch. maybe. maybenot.", action: nil)
                 .padding()
-            }
+//            ScrollView(showsIndicators: false) {
+//                LazyVGrid(columns: columns, alignment: .leading, spacing: 16) {
+//                    ForEach(Product.list) { product in
+//                        ProductCell(product: product)
+//                    }
+//                }
+//                .padding()
+//            }
         }
     }
 }

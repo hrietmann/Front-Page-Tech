@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ViewKit
+import AuthenticationKit
 
 
 
@@ -20,11 +21,11 @@ struct TabsView: View {
                 .selected(
                     Image(systemName: "newspaper.fill")
                         .foregroundColor(.pink)
-                        .overlay(notifDot)
+//                        .overlay(notifDot)
                 )
                 .deselected(
                     Image(systemName: "newspaper")
-                        .overlay(notifDot)
+//                        .overlay(notifDot)
                 )
             
             TabPage(ForumView())
@@ -36,9 +37,9 @@ struct TabsView: View {
                     Image(systemName: "bubble.left.and.bubble.right")
                 )
             
-            TabPage(Models3DView())
-                .selected(Image(systemName: "view.3d").font(.title2.weight(.heavy)).foregroundColor(.pink))
-                .deselected(Image(systemName: "view.3d"))
+//            TabPage(Models3DView())
+//                .selected(Image(systemName: "view.3d").font(.title2.weight(.heavy)).foregroundColor(.pink))
+//                .deselected(Image(systemName: "view.3d"))
             
             TabPage(PodcastView())
                 .selected(Image(systemName: "waveform").font(.title2.weight(.heavy)).foregroundColor(.pink))
@@ -63,5 +64,7 @@ struct TabsView: View {
 struct TabsView_Previews: PreviewProvider {
     static var previews: some View {
         TabsView()
+            .environmentObject(AuthManager(authenticator: Authenticator()))
+            .environmentObject(HomeManager.shared)
     }
 }

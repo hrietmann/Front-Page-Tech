@@ -9,8 +9,13 @@ import SwiftUI
 import ViewKit
 
 struct PodcastHeader: View {
+    
+    
     private let iconSize: CGFloat = 20
     @State private var offset: CGFloat = 0
+    @EnvironmentObject private var model: PodcastViewModel
+    
+    
     var body: some View {
         VStack(spacing: 0) {
             Spacer()
@@ -22,11 +27,12 @@ struct PodcastHeader: View {
                     .padding(.vertical, 20)
                 Spacer()
                 SeachHeaderButton(color: .white)
+                    .hidden()
                 AccountAvatarView()
             }
         }
         .padding(.horizontal)
-        .background(Color("podcast"))
+        .background(model.podcast?.colors.background ?? Color(uiColor: .tertiarySystemFill))
         .buttonStyle(BounceButtonStyle())
     }
     
@@ -47,5 +53,6 @@ struct PodcastHeader_Previews: PreviewProvider {
             }
         }
         .edgesIgnoringSafeArea(.all)
+        .environmentObject(PodcastViewModel())
     }
 }

@@ -19,7 +19,7 @@ import AuthenticationKit
 struct HomeView: View {
     
     @EnvironmentObject private var homeManager: HomeManager
-    @EnvironmentObject private var authenticationManager: AuthenticationManager<Authenticator>
+    @EnvironmentObject private var authManager: AuthManager<Authenticator>
     
     var body: some View {
         ZStack {
@@ -46,6 +46,6 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
             .environmentObject(HomeManager.shared)
-            .environmentObject(AuthenticationManager(authenticator: Authenticator()))
+            .environmentObject(AuthManager(authenticator: Authenticator()))
     }
 }

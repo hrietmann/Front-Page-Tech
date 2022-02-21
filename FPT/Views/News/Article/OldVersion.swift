@@ -28,7 +28,7 @@ struct OldVersion: View {
                     .overlay(image)
                     .frame(maxWidth: .infinity)
                     .background(Color(.tertiarySystemFill))
-                    .shimmering(active: manager.image.isLoading)
+//                    .shimmering(active: manager.image.isLoading)
                     .clipped()
                     .frame(width: geometry.size.width, height: self.getHeightForHeaderImage(geometry))
                     .blur(radius: self.getBlurRadiusForImage(geometry))
@@ -68,15 +68,15 @@ struct OldVersion: View {
     
     @ViewBuilder
     var image: some View {
-        if let image = manager.image.result {
-            image
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .transition(.opacity)
-        } else {
+//        if let image = manager.image.result {
+//            image
+//                .resizable()
+//                .aspectRatio(contentMode: .fill)
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                .transition(.opacity)
+//        } else {
             EmptyView()
-        }
+//        }
     }
     
     var header: some View {

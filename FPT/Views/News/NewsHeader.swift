@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ViewKit
+import AuthenticationKit
 
 struct NewsHeader: View {
     @State private var presentNotifWorkInProgress = false
@@ -24,6 +25,7 @@ struct NewsHeader: View {
                 
                 HStack(spacing: 30) {
                     SeachHeaderButton()
+                        .hidden()
                     
                     Button(action: { presentNotifWorkInProgress.toggle() }, label: {
                         Image(systemName: "bell.badge.fill")
@@ -32,7 +34,7 @@ struct NewsHeader: View {
                             .frame(width: 20, height: 20)
                             .padding(.vertical)
                     })
-                    .foregroundColor(Color(.label))
+                        .foregroundStyle(Color(.red), Color(.label))
                     .alert(isPresented: $presentNotifWorkInProgress, content: {
                         Alert(title: Text("Well…"),
                               message: Text("Sometimes, it's better to wait until things are ready… This really looks like s**t right now… 💩"),
@@ -43,6 +45,7 @@ struct NewsHeader: View {
                     .sheet(isPresented: $presentMoreDetails) {
                         NotificationsBetaFeaturesView()
                     }
+                    .hidden()
                     
                     AccountAvatarView()
                 }
@@ -68,5 +71,6 @@ struct NewsHeader: View {
 struct HomeHeader_Previews: PreviewProvider {
     static var previews: some View {
         NewsHeader()
+            .environmentObject(AuthManager(authenticator: Authenticator()))
     }
 }

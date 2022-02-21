@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ErrorView: View {
     
+    let title: String
     let error: String
     struct Action {
         let title: String
@@ -19,16 +20,16 @@ struct ErrorView: View {
             self.completion = completion
         }
     }
-    let action: Action
+    let action: Action?
     
-    init(error: String, action: @escaping () -> Action) {
+    init(title: String? = nil, error: String, action: (() -> Action)?) {
+        self.title = title ?? ["Oh, oh...", "🚽 problem!", "End of the show", "Well.. uh.", "Error ?! 🥸"].randomElement()!
         self.error = error
-        self.action = action()
+        self.action = action?()
     }
     
     var body: some View {
-        let title = ["Oh, oh...", "🚽 problem!", "End of the show", "Well.. uh.", "Error ?! 🥸"].randomElement()!
-        return VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 6) {
             Text(title)
                 .font(.title3.italic())
                 .fontWeight(.heavy)
@@ -38,16 +39,18 @@ struct ErrorView: View {
                 .fontWeight(.semibold)
                 .foregroundColor(.secondary)
             
-            Button(action: action.completion) {
-                Text(action.title)
-                    .padding(12)
-                    .foregroundColor(.white)
-                    .font(.subheadline.italic().weight(.heavy))
-                    .textCase(.uppercase)
-                    .lineLimit(1)
+            if let action = action {
+                Button(action: action.completion) {
+                    Text(action.title)
+                        .padding(12)
+                        .foregroundColor(.white)
+                        .font(.subheadline.italic().weight(.heavy))
+                        .textCase(.uppercase)
+                        .lineLimit(1)
+                }
+                .background(.tint)
+                .padding(.top)
             }
-            .background(.tint)
-            .padding(.top)
         }
         .padding()
         .padding()

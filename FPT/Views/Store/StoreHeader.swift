@@ -24,6 +24,7 @@ struct StoreHeader: View {
                 HStack(spacing: 26) {
                     
                     SeachHeaderButton()
+                        .hidden()
                     
                     Button(action: { presentUnderConstruction.toggle() }, label: {
                         Image(systemName: "shippingbox.fill")
@@ -32,6 +33,7 @@ struct StoreHeader: View {
                             .frame(width: iconSize, height: iconSize)
                             .padding(.vertical)
                     })
+                        .hidden()
                     
                     AccountAvatarView()
                 }

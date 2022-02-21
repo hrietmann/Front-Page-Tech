@@ -7,81 +7,58 @@
 
 import SwiftUI
 import ViewKit
+import AuthenticationKit
 
 struct ForumHeader: View {
+    
+    @EnvironmentObject private var authManager: AuthManager<Authenticator>
     private let iconSize: CGFloat = 20
     @State private var presentUnderConstruction = false
+    @State private var presentNewPost = false
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack(alignment: .center, spacing: 0) {
-                Text("Forum".uppercased())
-                    .font(.title.weight(.black).italic())
-                    .padding(20)
-                Spacer()
+        HStack(alignment: .center, spacing: 0) {
+            Text("Forum".uppercased())
+                .font(.title.weight(.black).italic())
+                .padding(20)
+            Spacer()
+            
+            HStack(spacing: 30) {
+                SeachHeaderButton().hidden()
                 
-                HStack(spacing: 30) {
-                    SeachHeaderButton()
-                    
-                    Button(action: {
-                        presentUnderConstruction.toggle()
-                    }) {
-                        Image(systemName: "square.and.pencil")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: iconSize, height: iconSize)
-                            .padding(.vertical)
-                    }
-                    
-                    AccountAvatarView()
+                Button(action: {
+                    presentNewPost.toggle()
+                }) {
+                    Image(systemName: "square.and.pencil")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: iconSize, height: iconSize)
+                        .padding(.vertical)
                 }
-                .buttonStyle(BounceButtonStyle())
-                .padding()
+                .fullScreenCover(isPresented: $presentNewPost) {
+                    if let user = authManager.user {
+                        NewPostView(user: user)
+                    } else {
+                        AuthenticationView()
+                    }
+                }
+                
+                AccountAvatarView()
             }
-            .frame(height: UIScreen.main.bounds.width * 0.2)
-            .zIndex(-2)
-            
-            HStack(spacing: 8) {
-                Text("Topic :".uppercased())
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.secondary)
-                Text("Apple,".uppercased())
-                    .fontWeight(.heavy)
-                Text("most recent".lowercased())
-                    .fontWeight(.bold)
-                    .foregroundColor(.pink)
-            }
-            .font(.headline)
-            .foregroundColor(Color(.label))
+            .buttonStyle(BounceButtonStyle())
             .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(.tertiarySystemFill))
-            .overlay(filter)
-            
-            Divider()
         }
+        .frame(height: UIScreen.main.bounds.width * 0.2)
+        .zIndex(-2)
         .sheet(isPresented: $presentUnderConstruction) {
             UnderConstructionView(closeButton: true)
         }
-    }
-    
-    var filter: some View {
-        Button(action: { presentUnderConstruction.toggle() }, label: {
-        Image(systemName: "line.3.horizontal.decrease")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: iconSize, height: iconSize)
-            .foregroundColor(Color(UIColor.tertiaryLabel))
-    })
-            .buttonStyle(BounceButtonStyle())
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .trailing)
     }
 }
 
 struct ForumHeader_Previews: PreviewProvider {
     static var previews: some View {
         ForumHeader()
+            .environmentObject(AuthManager(authenticator: Authenticator()))
     }
 }

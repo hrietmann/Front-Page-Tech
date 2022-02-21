@@ -15,10 +15,9 @@ struct SignupPasswordView: View {
             case password2
         }
     
-    @EnvironmentObject private var authenticationManager: AuthenticationManager<Authenticator>
+    @EnvironmentObject private var authManager: AuthManager<Authenticator>
     @FocusState private var focusedField: Field?
     @State private var presentNextPage = false
-    @State private var presentError = false
     
     var body: some View {
         VStack(spacing: 16) {
@@ -37,13 +36,13 @@ struct SignupPasswordView: View {
                 .padding(.bottom)
                 .padding(.horizontal)
             
-            SecureField("Password", text: $authenticationManager.passwordEntry)
+            SecureField("Password", text: $authManager.passwordEntry)
                 .textFieldStyle(.frontPageTech(icon: "key.fill", check: passwordCheck))
                 .textContentType(.newPassword)
                 .focused($focusedField, equals: .password)
                 .submitLabel(.next)
             
-            SecureField("Confirm your password", text: $authenticationManager.passwordEntry2)
+            SecureField("Confirm your password", text: $authManager.passwordEntry2)
                 .textFieldStyle(.frontPageTech(icon: "key.fill", check: password2Check))
                 .textContentType(.newPassword)
                 .focused($focusedField, equals: .password2)
@@ -53,7 +52,7 @@ struct SignupPasswordView: View {
             
             Button(action: goNext) {
                 Group {
-                    if authenticationManager.state.isLoading {
+                    if authManager.state.isLoading {
                         ProgressView()
                     } else {
                         Text("Next")
@@ -67,7 +66,7 @@ struct SignupPasswordView: View {
                 .background(.tint)
                 .foregroundColor(.white)
             }
-            .disabled(canGoToNext == false || authenticationManager.state.isDisconnected == false)
+            .disabled(canGoToNext == false || authManager.state.isDisconnected == false)
             .background {
                 NavigationLink(isActive: $presentNextPage) {
                     SignupProfileView()
@@ -89,25 +88,17 @@ struct SignupPasswordView: View {
             .onSubmit {
                 switch focusedField {
                 case .password:
-                    focusedField = authenticationManager.passwordEntry.isEmpty ? nil : .password2
+                    focusedField = authManager.passwordEntry.isEmpty ? nil : .password2
                     
                 case .password2:
                     focusedField = nil
-                    guard authenticationManager.passwordError == nil,
-                          authenticationManager.password2Error == nil
+                    guard authManager.passwordError == nil,
+                          authManager.password2Error == nil
                     else { return }
                     goNext()
                     
                 default: break
                 }
-            }
-            .onReceive(authenticationManager.$error) { error in
-                presentError = error != nil
-            }
-            .alert("Error", isPresented: $presentError) {
-                
-            } message: {
-                Text(authenticationManager.error?.localizedDescription ?? "Unknown error")
             }
     }
     
@@ -124,29 +115,29 @@ struct SignupPasswordView: View {
     }
     
     private var canGoToNext: Bool {
-        !authenticationManager.passwordEntry.isEmpty &&
-        !authenticationManager.passwordEntry2.isEmpty
+        !authManager.passwordEntry.isEmpty &&
+        !authManager.passwordEntry2.isEmpty
     }
     
     private var passwordCheck: FPTTextFieldStyle.CheckState {
-        guard !authenticationManager.passwordEntry.isEmpty else { return .none }
-        if let error = authenticationManager.passwordError, focusedField == nil
+        guard !authManager.passwordEntry.isEmpty else { return .none }
+        if let error = authManager.passwordError, focusedField == nil
         { return .invalid(error.localizedDescription) }
         let constraints = Authenticator.passwordConstraints
-        return authenticationManager.passwordEntry.isValidPassword(with: constraints) ? .valid : .none
+        return authManager.passwordEntry.isValidPassword(with: constraints) ? .valid : .none
     }
     
     private var password2Check: FPTTextFieldStyle.CheckState {
-        guard !authenticationManager.passwordEntry2.isEmpty else { return .none }
-        if let error = authenticationManager.password2Error, focusedField == nil
+        guard !authManager.passwordEntry2.isEmpty else { return .none }
+        if let error = authManager.password2Error, focusedField == nil
         { return .invalid(error.localizedDescription) }
         let constraints = Authenticator.passwordConstraints
-        return authenticationManager.passwordEntry2.isValidPassword(with: constraints) ? .valid : .none
+        return authManager.passwordEntry2.isValidPassword(with: constraints) ? .valid : .none
     }
     
     private func goNext() {
         focusedField = nil
-        let error = authenticationManager.passwordError ?? authenticationManager.password2Error
+        let error = authManager.passwordError ?? authManager.password2Error
         guard error == nil else { return }
         presentNextPage = true
     }
@@ -157,6 +148,6 @@ struct NewPasswordView_Previews: PreviewProvider {
         NavigationView {
             SignupPasswordView()
         }
-        .environmentObject(AuthenticationManager(authenticator: Authenticator()))
+        .environmentObject(AuthManager(authenticator: Authenticator()))
     }
 }

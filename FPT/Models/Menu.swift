@@ -21,13 +21,14 @@ struct Menu: Identifiable {
             case Menu.list[1].id.uuidString: NewsFeed(feed: .exclusives)
             case Menu.list[2].id.uuidString: NewsFeed(feed: .apple)
             case Menu.list[3].id.uuidString: NewsFeed(feed: .android)
-            case Menu.list[4].id.uuidString: NewsFeed(feed: .videos)
-            default: LeakView()
+//            case Menu.list[4].id.uuidString: NewsFeed(feed: .videos)
+//            default: LeakView()
+            default: NewsFeed(feed: .videos)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
     
-    static let list = ["Today", "Exclusives", "Apple", "Android", "Videos", "Got a leak ?"]
+    static let list = ["Today", "Exclusives", "Apple", "Android", "Videos"/*, "Got a leak ?"*/]
         .map { Menu(title: $0) }
 }

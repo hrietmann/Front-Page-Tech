@@ -17,7 +17,7 @@ struct SignupView: View {
             case emailAddress
         }
     
-    @EnvironmentObject private var authenticationManager: AuthenticationManager<Authenticator>
+    @EnvironmentObject private var authManager: AuthManager<Authenticator>
     @Environment(\.dismiss) private var dismiss
     @FocusState private var focusedField: Field?
     @State private var presentNextPage = false
@@ -30,7 +30,7 @@ struct SignupView: View {
                 .fontWeight(.heavy)
                 .padding()
             
-            TextField("Name", text: $authenticationManager.usernameEntry)
+            TextField("Name", text: $authManager.usernameEntry)
                 .textFieldStyle(.frontPageTech(icon: "person.fill", check: usernameCheck))
                 .focused($focusedField, equals: .username)
                 .keyboardType(.alphabet)
@@ -40,7 +40,7 @@ struct SignupView: View {
                 .disableAutocorrection(false)
                 .submitLabel(.next)
             
-            TextField("Email", text: $authenticationManager.emailEntry)
+            TextField("Email", text: $authManager.emailEntry)
                 .textFieldStyle(.frontPageTech(icon: "envelope.fill", check: emailCheck))
                 .focused($focusedField, equals: .emailAddress)
                 .keyboardType(.emailAddress)
@@ -87,12 +87,12 @@ struct SignupView: View {
             .onSubmit {
                 switch focusedField {
                 case .username:
-                    focusedField = !authenticationManager.usernameEntry.isEmpty ? .emailAddress : nil
+                    focusedField = !authManager.usernameEntry.isEmpty ? .emailAddress : nil
                     
                 case .emailAddress:
                     focusedField = nil
-                    guard authenticationManager.usernameError == nil,
-                          authenticationManager.emailError == nil
+                    guard authManager.usernameError == nil,
+                          authManager.emailError == nil
                     else { return }
                     goNext()
                     
@@ -102,24 +102,24 @@ struct SignupView: View {
     }
     
     private var canGoToNext: Bool {
-        !authenticationManager.usernameEntry.isEmpty &&
-        !authenticationManager.emailEntry.isEmpty
+        !authManager.usernameEntry.isEmpty &&
+        !authManager.emailEntry.isEmpty
     }
     private var usernameCheck: FPTTextFieldStyle.CheckState {
-        guard !authenticationManager.usernameEntry.isEmpty else { return .none }
-        if let error = authenticationManager.usernameError, focusedField == nil
+        guard !authManager.usernameEntry.isEmpty else { return .none }
+        if let error = authManager.usernameError, focusedField == nil
         { return .invalid(error.localizedDescription) }
-        return authenticationManager.usernameEntry.isValidUsername ? .valid : .none
+        return authManager.usernameEntry.isValidUsername ? .valid : .none
     }
     private var emailCheck: FPTTextFieldStyle.CheckState {
-        guard !authenticationManager.emailEntry.isEmpty else { return .none }
-        if let error = authenticationManager.emailError, focusedField == nil
+        guard !authManager.emailEntry.isEmpty else { return .none }
+        if let error = authManager.emailError, focusedField == nil
         { return .invalid(error.localizedDescription) }
-        return authenticationManager.emailEntry.isValidEmail ? .valid : .none
+        return authManager.emailEntry.isValidEmail ? .valid : .none
     }
     private func goNext() {
         focusedField = nil
-        let error = authenticationManager.usernameError ?? authenticationManager.emailError
+        let error = authManager.usernameError ?? authManager.emailError
         guard error == nil else { return }
         presentNextPage = true
     }
@@ -130,6 +130,6 @@ struct SignupView_Previews: PreviewProvider {
         NavigationView {
             SignupView()
         }
-            .environmentObject(AuthenticationManager(authenticator: Authenticator()))
+            .environmentObject(AuthManager(authenticator: Authenticator()))
     }
 }

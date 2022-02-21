@@ -9,6 +9,9 @@ import SwiftUI
 import AuthenticationKit
 import ViewKit
 import SPAlert
+import Shimmer
+
+
 
 struct AccountAvatarView: View {
     
@@ -20,7 +23,7 @@ struct AccountAvatarView: View {
         var id: Int { rawValue }
     }
     @State private var presentPage: AuthPage? = nil
-    @EnvironmentObject private var authentication: AuthenticationManager<Authenticator>
+    @EnvironmentObject private var authentication: AuthManager<Authenticator>
     
     var body: some View {
         Button {
@@ -36,6 +39,7 @@ struct AccountAvatarView: View {
                     .scaledToFill()
                     .foregroundStyle(Color(.label))
                     .frame(width: 18, height: 18, alignment: .center)
+                    .shimmering(active: authentication.user?.profileImageURL != nil)
             }
             .frame(width: 40, height: 40)
             .background(.thinMaterial)
@@ -76,6 +80,6 @@ struct AccountAvatarView: View {
 struct AccountAvatarView_Previews: PreviewProvider {
     static var previews: some View {
         AccountAvatarView()
-            .environmentObject(AuthenticationManager(authenticator: Authenticator()))
+            .environmentObject(AuthManager(authenticator: Authenticator()))
     }
 }

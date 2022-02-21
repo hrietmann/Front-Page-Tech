@@ -13,7 +13,7 @@ import FeedKit
 
 
 
-struct Article: Identifiable {
+struct Article: Identifiable, Equatable {
     
     
     
@@ -37,7 +37,7 @@ struct Article: Identifiable {
         url = try itemURL ?? doc.articlePublicURL() ?? URL(string: "https://www.frontpagetech.com")!
         imageURL = try doc.articleHeadImage()
         title = try item.title ?? doc.articleTitle() ?? "Unknown"
-        subtitle = item.categories?.last?.value ?? "Unknown"
+        subtitle = item.categories?.last?.value ?? "Miscellaneous"
         description = try item.description ?? doc.articleDescription() ?? "No description found."
         createdAt = try item.pubDate ?? doc.articleCreation() ?? Date()
         updatedAt = try doc.articleUpdateDate()
@@ -69,6 +69,6 @@ struct Article: Identifiable {
         contentItems = try doc.articleItems()
     }
     
-    
+    static func == (lhs: Self, rhs: Self) -> Bool { lhs.id == rhs.id }
     
 }

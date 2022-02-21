@@ -18,10 +18,15 @@ struct ArticleWriter: View {
         VStack(spacing: 20) {
             HStack {
                 
-                AsyncImage(url: article?.authorImageURL,
-                           placeholder: Image("FPT App Icon")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill))
+                AsyncImage(url: article?.authorImageURL) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                } placeholder: {
+                    Image("FPT App Icon")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                }
                     .frame(width: 35, height: 35)
                     .clipShape(Circle())
                 

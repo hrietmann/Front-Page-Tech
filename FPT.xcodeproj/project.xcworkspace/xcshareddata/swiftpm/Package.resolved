@@ -15,7 +15,7 @@
         "repositoryURL": "https://github.com/hrietmann/AuthenticationKit.git",
         "state": {
           "branch": "main",
-          "revision": "0cf9dd516903f4718444f16c33c2762312f6fb94",
+          "revision": "b8dead9660f5673dc4c01ec3f3af302611cc86f4",
           "version": null
         }
       },
@@ -26,6 +26,15 @@
           "branch": null,
           "revision": "734a8247442fde37df4364c21f6a0085b6a36728",
           "version": "0.7.2"
+        }
+      },
+      {
+        "package": "CodableKit",
+        "repositoryURL": "https://github.com/hrietmann/CodableKit.git",
+        "state": {
+          "branch": "main",
+          "revision": "16e78dd650280bb51095b5c0d060af0ae57d0d16",
+          "version": null
         }
       },
       {
@@ -101,6 +110,15 @@
         }
       },
       {
+        "package": "LogKit",
+        "repositoryURL": "https://github.com/hrietmann/LogKit.git",
+        "state": {
+          "branch": "main",
+          "revision": "357eded0db69166c6aaf3d44c0b00428206e5cdb",
+          "version": null
+        }
+      },
+      {
         "package": "nanopb",
         "repositoryURL": "https://github.com/firebase/nanopb.git",
         "state": {
@@ -173,12 +191,30 @@
         }
       },
       {
+        "package": "SWXMLHash",
+        "repositoryURL": "https://github.com/drmohundro/SWXMLHash.git",
+        "state": {
+          "branch": "main",
+          "revision": "8b594e0da530b3c45e4dc91c7b55e05f5546a795",
+          "version": null
+        }
+      },
+      {
         "package": "ViewKit",
         "repositoryURL": "https://github.com/hrietmann/ViewKit.git",
         "state": {
           "branch": "main",
-          "revision": "e9ac816c741bd4f10b97d1d3a286cbf0d3aed258",
+          "revision": "447bf4c275d92fc433549efb33a1d7907b1f1c08",
           "version": null
+        }
+      },
+      {
+        "package": "YouTubePlayerKit",
+        "repositoryURL": "https://github.com/SvenTiigi/YouTubePlayerKit.git",
+        "state": {
+          "branch": null,
+          "revision": "1f78a2121f58b393bca54bc0a8da9e9b11cab198",
+          "version": "1.1.9"
         }
       }
     ]

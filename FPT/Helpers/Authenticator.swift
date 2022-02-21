@@ -10,8 +10,10 @@ import AuthenticationKit
 import StringKit
 import Combine
 import FirebaseAuth
+import FirebaseFirestore
 import FirebaseStorage
 import CoreGraphics
+import CodableKit
 
 
 
@@ -30,6 +32,7 @@ class Authenticator: AKAuthenticator {
         return .init(firebaseUser)
     }
     private var authListner: AuthStateDidChangeListenerHandle?
+    private var userMetadataListener: ListenerRegistration?
     
     
     
@@ -40,16 +43,20 @@ class Authenticator: AKAuthenticator {
     
     
     public func addRemoteUpdatesLisnters(for user: User) async throws {
-        authListner = Auth.auth().addStateDidChangeListener { auth, user in
-            if let user = user { self.currentUser = .init(user) }
-            else { self.currentUser = nil }
+        authListner = Auth.auth().addStateDidChangeListener { [weak self] auth, user in
+            if let user = user { self?.currentUser = .init(user) }
+            else { self?.currentUser = nil }
+        }
+        userMetadataListener = Firestore.firestore().collection("users").document(user.id).addSnapshotListener { [weak self] snapshot, error in
+            if let error = error { fatalError(error.localizedDescription) }
+            if let json = snapshot?.data(), let user = try? User.from(json: json) { self?.currentUser = user }
         }
     }
     
     
     public func removeRemoteUpdatesListners(for user: User) async throws {
-        guard let authListner = authListner else { return }
-        Auth.auth().removeStateDidChangeListener(authListner)
+        if let authListner = authListner { Auth.auth().removeStateDidChangeListener(authListner) }
+        userMetadataListener?.remove()
     }
     
     
@@ -61,7 +68,9 @@ class Authenticator: AKAuthenticator {
         let change = result.user.createProfileChangeRequest()
         change.displayName = username
         try await change.commitChanges()
-        return .init(result.user)
+        let user = User(result.user)
+        try await user.updateInFirestoreDatabase()
+        return user
     }
     
     
@@ -74,6 +83,20 @@ class Authenticator: AKAuthenticator {
     }
     
     
+    func signInWithApple(tokenID: String, nonce: String) async throws -> User {
+        let credential = OAuthProvider.credential(withProviderID: "apple.com",
+                                                  idToken: tokenID,
+                                                  rawNonce: nonce)
+        let result = try await Auth.auth().signIn(with: credential)
+        #if !DEBUG
+        try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+        #endif
+        let user = User(result.user)
+        try await user.updateInFirestoreDatabase()
+        return user
+    }
+    
+    
     public func signOut(user: User) async throws {
         #if !DEBUG
         try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
@@ -83,9 +106,12 @@ class Authenticator: AKAuthenticator {
     
     
     func change(email: String, with password: String, of user: User) async throws {
-        let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        let currentEmail = currentUser?.email ?? ""
+        let credential = EmailAuthProvider.credential(withEmail: currentEmail, password: password)
         try await Auth.auth().currentUser?.reauthenticate(with: credential)
         try await Auth.auth().currentUser?.updateEmail(to: email)
+        currentUser?.email = email
+        try await currentUser?.updateInFirestoreDatabase()
     }
     
     
@@ -102,7 +128,9 @@ class Authenticator: AKAuthenticator {
     
     
     func sendPasswordReset(to email: String) async throws {
+        let currentUser = self.currentUser
         try await Auth.auth().sendPasswordReset(withEmail: email)
+        self.currentUser = currentUser
     }
     
     
@@ -110,6 +138,8 @@ class Authenticator: AKAuthenticator {
         let change = Auth.auth().currentUser?.createProfileChangeRequest()
         change?.displayName = username
         try await change?.commitChanges()
+        currentUser?.username = username
+        try await currentUser?.updateInFirestoreDatabase()
     }
     
     
@@ -123,23 +153,43 @@ class Authenticator: AKAuthenticator {
         
         // Upload the new one
         let url: URL?
-        let imageName = UUID().uuidString
+        let imageName = user.id
         if let data = image?.jpegData(compressionQuality: 1) {
             let metadata = StorageMetadata()
             metadata.contentType = "image/jpeg"
             
+            let imageData: Data?
+            let maxSize = 200_000
+            if data.count < maxSize { imageData = data }
+            else {
+                let compression = CGFloat(maxSize) / CGFloat(data.count)
+                imageData = image?.jpegData(compressionQuality: compression)
+            }
+            
             let reference = Storage.storage().reference()
             let imageRef = reference.child("images/\(imageName).jpeg")
-            url = try await imageRef.upload(image: data, with: metadata)
+            if let imageData = imageData {
+                url = try await imageRef.upload(image: imageData, with: metadata)
+            } else { url = nil }
+            
         } else { url = nil }
         let change = Auth.auth().currentUser?.createProfileChangeRequest()
         change?.photoURL = url
         try await change?.commitChanges()
+        currentUser?.profileImageURL = url
+        try await currentUser?.updateInFirestoreDatabase()
     }
     
     
     func delete(user: User) async throws {
+        #if !DEBUG
+        try await Task.sleep(nanoseconds: 8 * 1_000_000_000)
+        #endif
+        try await user.delete()
         try await Auth.auth().currentUser?.delete()
+        let reference = Storage.storage().reference().child("images/\(user.id).jpeg")
+        try await reference.delete()
+        currentUser = nil
     }
     
     

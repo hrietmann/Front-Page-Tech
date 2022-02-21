@@ -68,7 +68,7 @@ struct ArticlePage: View {
                 .overlay(image)
                 .frame(maxWidth: .infinity)
                 .background(Color(.tertiarySystemFill))
-                .shimmering(active: manager.image.isLoading)
+//                .shimmering(active: manager.image.isLoading)
                 .clipped()
                 .padding(.trailing, 32)
                 .onTapGesture {
@@ -111,15 +111,15 @@ struct ArticlePage: View {
     
     @ViewBuilder
     var image: some View {
-        if let image = manager.image.result {
-            image
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .transition(.opacity)
-        } else {
+//        if let image = manager.image.result {
+//            image
+//                .resizable()
+//                .aspectRatio(contentMode: .fill)
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                .transition(.opacity)
+//        } else {
             EmptyView()
-        }
+//        }
     }
     
 }

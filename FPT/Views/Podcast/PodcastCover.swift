@@ -12,27 +12,44 @@ import ViewKit
 struct PodcastCover: View {
     
     @State private var presentNotWorking = false
+    @EnvironmentObject private var model: PodcastViewModel
      
     var body: some View {
         VStack(spacing: 16) {
             
-            Image("podcast")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: UIScreen.main.bounds.width * 0.6, height: UIScreen.main.bounds.width * 0.6)
+            Color(uiColor: .tertiarySystemFill)
+                .frame(width: UIScreen.main.bounds.width * 0.6,
+                       height: UIScreen.main.bounds.width * 0.6)
+                .overlay {
+                    if let image = model.podcast?.artwork {
+                        Image(uiImage: image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    } else {
+                        EmptyView()
+                    }
+                }
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 .shadow(radius: 16)
             
-            Text("Genius Bar".uppercased())
+            Text(model.podcast?.name.uppercased() ?? "PODCAST NAME")
                 .font(.title3.weight(.heavy))
                 .foregroundColor(Color.white)
             
-            Text("Jon Prosser + Sam Kohl")
+            Text(model.podcast?.author ?? "Podcast author")
                 .font(.footnote)
-                .foregroundColor(Color(.cyan).opacity(0.8))
+                .foregroundColor(model.podcast?.colors.primary ?? Color.secondary)
             
-            Button(action: { presentNotWorking.toggle() }) {
-                Label("Play", systemImage: "play.fill")
+            Button {
+                switch model.playerState {
+                case .playing(let episode): model.pause(episode: episode)
+                case .paused(let episode): model.play(episode: episode)
+                case .idle:
+                    guard let first = model.podcast?.episodes.first else { return }
+                    model.presentedEpisode = first
+                }
+            } label: {
+                Label(model.playerState.isPlaying ? "Pause": "Play", systemImage: model.playerState.isPlaying ? "pause.fill": "play.fill")
                     .padding(.vertical)
                     .font(.headline.weight(.bold))
                     .foregroundColor(Color.black)
@@ -40,27 +57,25 @@ struct PodcastCover: View {
                     .background(Color.white)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
             }
-            .alert(isPresented: $presentNotWorking) {
-                Alert(title: Text("I can't, sir… 😪"), message: Text("I know, that's disapointing… But you know, that's already a lot done considering this app was built in only 3 days and in the toilets on a 13‘‘ MacBook. 😂"), dismissButton: .cancel(Text("That's already very cool ! 👌🏻")))
-            }
+            .buttonStyle(.bounce)
             
-            Text("Though this show is hosted bu Jon Prosser and Sam Kohl, this id DEFINITELY not a podcast about Apple. Nope. Huh uh.")
+            Text(model.podcast?.description ?? "Podcast description")
                 .font(.footnote)
                 .foregroundColor(Color.white)
             
-            Text("Technologies • Updates each two weeks")
+            Text("\(model.podcast?.genre ?? "Genre") • Updates each week")
                 .font(.footnote)
-                .foregroundColor(Color(.cyan).opacity(0.8))
+                .foregroundColor(model.podcast?.colors.primary ?? Color.secondary)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal)
         .padding(.vertical, 26)
         .frame(maxWidth: .infinity)
-        .background(Color("podcast"))
+        .background(model.podcast?.colors.background ?? Color(uiColor: .tertiarySystemFill))
         .buttonStyle(BounceButtonStyle())
         .overlay(
-            Color("podcast")
+            (model.podcast?.colors.background ?? Color(uiColor: .tertiarySystemFill))
                 .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
                 .padding(.top, -UIScreen.main.bounds.width)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -71,5 +86,6 @@ struct PodcastCover: View {
 struct PodcastCover_Previews: PreviewProvider {
     static var previews: some View {
         PodcastCover()
+            .environmentObject(PodcastViewModel())
     }
 }

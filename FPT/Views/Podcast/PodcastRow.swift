@@ -6,46 +6,76 @@
 //
 
 import SwiftUI
+import SwiftUIX
 import ViewKit
+import Shimmer
 
 struct PodcastRow: View {
     
-    let podcast: Podcast
+    let episode: PodcastEpisode?
     @State private var presentNotWorkedFeature = false
+    @EnvironmentObject private var model: PodcastViewModel
+    
+    init() {
+        episode = nil
+    }
+    init(episode: PodcastEpisode) {
+        self.episode = episode
+    }
     
     var body: some View {
+        content
+            .foregroundColor(.label)
+            .background(.systemBackground)
+            .onTapGesture {
+                guard let episode = episode else { return }
+                model.presentedEpisode = episode
+            }
+    }
+    
+    var content: some View {
         VStack(spacing: 16) {
-            thumbnail
+            if episode?.video != nil {
+                thumbnail
+            }
             
             HStack(spacing: 16) {
                 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(podcast.date.timeAgo.uppercased())
+                    Text((episode?.date ?? Date()).timeAgo.uppercased())
                         .font(.footnote)
                         .fontWeight(.heavy)
                         .foregroundColor(.secondary)
-                    Text(podcast.title)
+                    Text(episode?.completeTitle ?? "Title missing")
                         .font(.headline)
                         .bold()
-                    Text(podcast.description)
-                        .font(.footnote)
-                        .foregroundColor(Color(.tertiaryLabel))
-                    Text(podcast.duration.duration)
+                        .lineLimit(1)
+                    if let summary = episode?.summary {
+                        Text(summary.trimmingCharacters(in: .newlines))
+                            .font(.footnote)
+                            .lineLimit(3)
+                            .foregroundColor(Color(.tertiaryLabel))
+                    }
+                    Text((episode?.duration ?? 0).duration)
                         .font(.footnote)
                         .foregroundColor(.pink)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .multilineTextAlignment(.leading)
                 
-                Button(action: { presentNotWorkedFeature.toggle() }) {
-                    Image(systemName: "headphones")
+                Button(action: {
+                    guard let episode = episode else {
+                        return
+                    }
+                    model.presentedEpisode = episode
+                    if model.playerState.isPlaying { model.pause(episode: episode) }
+                }) {
+                    Image(systemName: model.playerState.episode?.id == episode?.id && model.playerState.isPlaying ? "pause.fill": "play.fill")
                         .font(Font.caption.bold())
                         .foregroundColor(.pink)
                         .padding(8)
                         .background(Color(UIColor.secondarySystemFill))
                         .clipShape(Circle())
-                }
-                .alert(isPresented: $presentNotWorkedFeature) {
-                    Alert(title: Text("Just visual…"), message: Text("…for now. Honestly, I didn't work much more than on visuals for the podcasts section. However there's a lot to be done, so stay tuned !"), dismissButton: .cancel(Text("Keep it up 👍🏼")))
                 }
             }
             .padding(.trailing)
@@ -55,34 +85,41 @@ struct PodcastRow: View {
         .padding(.top)
     }
     
-    @State private var isAppeared = false
     var thumbnail: some View {
-        Image(podcast.image)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .onAppear(perform: {
-                withAnimation(.spring().delay(2.4)) {
-                    isAppeared = true
+        Color(uiColor: .tertiarySystemFill)
+            .frame(maxWidth: .infinity)
+            .aspectRatio(16/9, contentMode: .fit)
+            .overlay {
+                SwiftUI.AsyncImage(url: episode?.video?.thumbnailURL) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    Color(uiColor: .tertiarySystemFill)
+                        .shimmering()
                 }
-            })
-            .onDisappear(perform: { isAppeared = false })
+            }
             .overlay(
-                Color.black
-                    .opacity(isAppeared ? 0.3:0)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            )
-            .overlay(
-                Button(action: { presentNotWorkedFeature.toggle() }, label: {
-                Image(systemName: "play.fill")
-                    .font(Font.footnote.bold())
-                    .foregroundColor(.pink)
-                    .padding(12)
-                    .background(Color(.systemBackground))
-                    .clipShape(Circle())
-                    .opacity(isAppeared ? 1:0)
-                    .offset(y: isAppeared ? 0:32)
-            })
+                Button {
+                    guard let episode = episode else {
+                        return
+                    }
+                    model.presentedEpisode = episode
+                } label: {
+                    Image(systemName: "play.fill")
+                        .font(.title3)
+                        .padding()
+                        .background {
+                            VisualEffectBlurView(blurStyle: .systemMaterial)
+                        }
+                        .clipShape(Circle())
+                        .overlay {
+                            Circle()
+                                .stroke(Color.secondaryLabel, lineWidth: 0.3)
+                        }
+                }
                     .buttonStyle(BounceButtonStyle())
+                    .shadow(radius: 8)
             )
             .cornerRadius(8)
             .padding(.trailing)
@@ -91,6 +128,7 @@ struct PodcastRow: View {
 
 struct PodcastRow_Previews: PreviewProvider {
     static var previews: some View {
-        PodcastRow(podcast: .list[0])
+        PodcastRow()
+            .environmentObject(PodcastViewModel())
     }
 }

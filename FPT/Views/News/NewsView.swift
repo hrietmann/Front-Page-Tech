@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ViewKit
+import AuthenticationKit
 
 
 struct NewsView: View {
@@ -21,7 +22,8 @@ struct NewsView: View {
                 .zIndex(0)
             
             HStack(spacing: 0) {
-                MenuView(selected: $manager.menu)
+                NewsViewMenu(selected: $manager.menu)
+                    .frame(width: 16 * 4)
                 manager.menu.content
                     .overlay(twitterButton)
             }
@@ -56,7 +58,7 @@ struct NewsView: View {
             .clipShape(Circle())
             .transition(.move(edge: .bottom))
             .animation(.spring())
-            .overlay(twitterNotification)
+//            .overlay(twitterNotification)
     }
     
     var twitterNotification: some View {
@@ -78,5 +80,7 @@ struct NewsView: View {
 struct NewsView_Previews: PreviewProvider {
     static var previews: some View {
         NewsView()
+            .environmentObject(AuthManager(authenticator: Authenticator()))
+            .environmentObject(HomeManager.shared)
     }
 }
