@@ -75,7 +75,10 @@ struct AppIconsView: View {
     }
     
     func setAppIcon() {
-        UIApplication.shared.setAlternateIconName(selectedAppIcon) { _ in
+        let numberString = selectedAppIcon.components(separatedBy: " ").last ?? "1"
+        let number = Int(numberString) ?? 1
+        let string = "AppIconAlternate\(number)"
+        UIApplication.shared.setAlternateIconName(string) { _ in
             self.dismiss()
         }
     }
